@@ -8,6 +8,8 @@
 
 #import "LoginSession+Additions.h"
 #import "SLocalStoreClient.h"
+#import "SNetworkClient.h"
+#import "SVProgressHUD.h"
 
 #import "DBSession.h"
 
@@ -150,11 +152,23 @@ static int kDBCredentialsVersion = 2;
 - (void)setAccessToken:(NSString *)token accessTokenSecret:(NSString *)secret forUserId:(NSString *)userId {
     
     LoginSession *session = [LoginSession currentLoginSession];
-    session.dropbox_uid = userId;
-    session.dropbox_token = token;
-    session.dropbox_secret = secret;
 
-    [SLocalStoreClient saveDatabase];
+    if (!([session.dropbox_uid length] > 0) || !([session.dropbox_secret length] > 0) || !([session.dropbox_token length] > 0)) {
+        
+        session.dropbox_uid = userId;
+        session.dropbox_token = token;
+        session.dropbox_secret = secret;
+        [SLocalStoreClient saveDatabase];
+        [SVProgressHUD showWithStatus:@"Linking Dropbox..."];
+        [[SNetworkClient sharedClient] updateUserDropboxWithNewAuthCompletion:^(NSDictionary *user, NSError *error) {
+            if (error) {
+                [SVProgressHUD showErrorWithStatus:@"Dropbox couldn't be linked"];
+            } else {
+                [SVProgressHUD showSuccessWithStatus:@"Dropbox linked"];
+            }        
+        }];
+        
+    }
     
     MPOAuthCredentialConcreteStore *credentialStore = [credentialStores objectForKey:userId];
     if (!credentialStore) {
