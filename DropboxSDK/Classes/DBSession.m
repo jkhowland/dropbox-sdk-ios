@@ -6,6 +6,9 @@
 //  Copyright 2010 Dropbox, Inc. All rights reserved.
 //
 
+#import "LoginSession+Additions.h"
+#import "SLocalStoreClient.h"
+
 #import "DBSession.h"
 
 #import "DBKeychain.h"
@@ -145,6 +148,14 @@ static int kDBCredentialsVersion = 2;
 }
 
 - (void)setAccessToken:(NSString *)token accessTokenSecret:(NSString *)secret forUserId:(NSString *)userId {
+    
+    LoginSession *session = [LoginSession currentLoginSession];
+    session.dropbox_uid = userId;
+    session.dropbox_token = token;
+    session.dropbox_secret = secret;
+
+    [SLocalStoreClient saveDatabase];
+    
     MPOAuthCredentialConcreteStore *credentialStore = [credentialStores objectForKey:userId];
     if (!credentialStore) {
         credentialStore = 
