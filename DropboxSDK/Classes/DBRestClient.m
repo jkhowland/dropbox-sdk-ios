@@ -578,7 +578,7 @@ params:(NSDictionary *)params
 - (void)uploadFile:(NSString *)filename toPath:(NSString *)path withParentRev:(NSString *)parentRev
     fromPath:(NSString *)sourcePath {
 
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@"false" forKey:@"overwrite"];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@"true" forKey:@"overwrite"];
     if (parentRev) {
         [params setObject:parentRev forKey:@"parent_rev"];
     }
