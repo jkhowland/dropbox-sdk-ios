@@ -721,7 +721,7 @@ params:(NSDictionary *)params
 
 	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								   uploadId, @"upload_id",
-								   @"false", @"overwrite", nil];
+								   @"true", @"overwrite", nil];
 	if (parentRev) {
 		[params setObject:parentRev forKey:@"parent_rev"];
 	}
