@@ -153,7 +153,7 @@ static int kDBCredentialsVersion = 2;
     
     LoginSession *session = [LoginSession currentLoginSession];
 
-    if (!([session.dropbox_uid length] > 0) || !([session.dropbox_secret length] > 0) || !([session.dropbox_token length] > 0)) {
+    if (([session.dropbox_uid length] == 0) || ([session.dropbox_secret length] == 0) || ([session.dropbox_token length] == 0)) {
         
         session.dropbox_uid = userId;
         session.dropbox_token = token;
@@ -167,7 +167,6 @@ static int kDBCredentialsVersion = 2;
                 [SVProgressHUD showSuccessWithStatus:@"Dropbox linked"];
             }        
         }];
-        
     }
     
     MPOAuthCredentialConcreteStore *credentialStore = [credentialStores objectForKey:userId];
